@@ -1,10 +1,197 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi Rutina PRO</title>
+<meta charset="UTF-8">
+<title>Mi Rutina PRO</title>
+
+<style>
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #0f172a;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 15px;
+  background: #1e293b;
+}
+
+.container {
+  padding: 15px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.hecho {
+  background: #22c55e;
+}
+
+button {
+  margin-top: 10px;
+  padding: 6px;
+  border: none;
+  border-radius: 5px;
+  background: #3b82f6;
+  color: white;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #334155;
+  border-radius: 10px;
+}
+
+.progress {
+  height: 8px;
+  background: #22c55e;
+  width: 0%;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background: #1e293b;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.hidden { display: none; }
+
+textarea {
+  width: 100%;
+  margin-top: 10px;
+}
+</style>
 </head>
+
 <body>
-  <h1>🔥 Mi App ya funciona</h1>
+
+<header>
+  <h2>📱 Mi Rutina</h2>
+  <div id="dia"></div>
+</header>
+
+<div class="container">
+
+<div class="card">
+  <strong>Progreso</strong>
+  <div class="progress-bar">
+    <div class="progress" id="barra"></div>
+  </div>
+</div>
+
+<div id="rutina"></div>
+
+<div id="reflexion" class="hidden">
+  <div class="card">
+    <h3>🧠 Reflexión</h3>
+    <textarea id="aprendi" placeholder="¿Qué aprendí?"></textarea>
+    <textarea id="no" placeholder="¿Qué no entendí?"></textarea>
+    <button onclick="guardar()">Guardar</button>
+  </div>
+</div>
+
+</div>
+
+<div class="tabs">
+  <div onclick="ver('rutina')">🏠 Día</div>
+  <div onclick="ver('reflexion')">🧠</div>
+</div>
+
+<script>
+
+const dias = ["domingo","lunes","martes","miercoles","jueves","viernes","sabado"];
+const hoy = dias[new Date().getDay()];
+document.getElementById("dia").innerText = hoy.toUpperCase();
+
+function cursos(){
+  const map = {
+    lunes:["Botánica","Química"],
+    martes:["Física","Matemática"],
+    miercoles:["Botánica","Química"],
+    jueves:["Física","Matemática"],
+    viernes:["Botánica","Química"],
+    sabado:["Física","Matemática"]
+  };
+  return map[hoy];
+}
+
+function rutina(){
+  let r = [
+  ["06:00","Barrer"],
+  ["06:30","Tareas"],
+  ["06:45","Ducha"],
+  ["07:00","Desayuno"],
+  ["07:15","Traslado"]
+  ];
+
+  if(["lunes","jueves","sabado"].includes(hoy)){
+    r.push(["14:00","Deporte"]);
+  } else {
+    r.push(["14:00","Trabajo"]);
+  }
+
+  let c = cursos();
+
+  r.push(["20:00","Curso fuerte: "+c[0]]);
+  r.push(["21:15","Descanso"]);
+  r.push(["21:20","Curso ligero: "+c[1]]);
+
+  return r;
+}
+
+function cargar(){
+  let cont = document.getElementById("rutina");
+  cont.innerHTML = "";
+  let datos = rutina();
+  let comp = 0;
+
+  datos.forEach((e,i)=>{
+    let key = hoy+i;
+    let ok = localStorage.getItem(key);
+
+    if(ok) comp++;
+
+    cont.innerHTML += `
+    <div class="card ${ok?'hecho':''}">
+      <b>${e[0]}</b> - ${e[1]}
+      <br>
+      <button onclick="done('${key}')">✔</button>
+    </div>`;
+  });
+
+  document.getElementById("barra").style.width = (comp/datos.length*100)+"%";
+}
+
+function done(k){
+  localStorage.setItem(k,true);
+  cargar();
+}
+
+function ver(t){
+  document.getElementById("rutina").classList.add("hidden");
+  document.getElementById("reflexion").classList.add("hidden");
+  document.getElementById(t).classList.remove("hidden");
+}
+
+function guardar(){
+  localStorage.setItem("aprendi"+hoy,aprendi.value);
+  localStorage.setItem("no"+hoy,no.value);
+  alert("Guardado");
+}
+
+cargar();
+
+</script>
+
 </body>
 </html>
