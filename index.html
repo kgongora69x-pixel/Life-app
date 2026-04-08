@@ -2,118 +2,120 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Mi Rutina PRO</title>
+<title>Life App PRO</title>
 
 <style>
 body {
-  font-family: Arial;
   margin: 0;
-  background: #0f172a;
+  font-family: Arial;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
   color: white;
 }
 
-header {
-  text-align: center;
-  padding: 15px;
-  background: #1e293b;
+/* PANTALLA INICIO */
+#inicio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
+
+#inicio h1 {
+  font-size: 30px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* DIAS */
+#dias button {
+  background: #3b82f6;
+  color: white;
+}
+
+/* APP */
+.hidden { display: none; }
 
 .container {
   padding: 15px;
 }
 
 .card {
-  background: #1e293b;
-  padding: 15px;
+  background: rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 12px;
   margin-bottom: 10px;
-  border-radius: 10px;
 }
 
 .hecho {
-  background: #22c55e;
+  background: rgba(34,197,94,0.4);
 }
 
-button {
-  margin-top: 10px;
-  padding: 6px;
-  border: none;
-  border-radius: 5px;
-  background: #3b82f6;
-  color: white;
+.time {
+  font-size: 12px;
+  color: #94a3b8;
 }
 
 .progress-bar {
-  height: 8px;
+  height: 10px;
   background: #334155;
   border-radius: 10px;
 }
 
 .progress {
-  height: 8px;
+  height: 10px;
   background: #22c55e;
   width: 0%;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  background: #1e293b;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
-.hidden { display: none; }
-
-textarea {
-  width: 100%;
-  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h2>📱 Mi Rutina</h2>
-  <div id="dia"></div>
-</header>
+<!-- INICIO -->
+<div id="inicio">
+  <h1>📱 Mi Life App</h1>
+  <button onclick="mostrarDias()">Entrar</button>
 
-<div class="container">
-
-<div class="card">
-  <strong>Progreso</strong>
-  <div class="progress-bar">
-    <div class="progress" id="barra"></div>
+  <div id="dias" class="hidden">
+    <h3>Selecciona tu día</h3>
+    <button onclick="cargarDia('lunes')">Lunes</button>
+    <button onclick="cargarDia('martes')">Martes</button>
+    <button onclick="cargarDia('miercoles')">Miércoles</button>
+    <button onclick="cargarDia('jueves')">Jueves</button>
+    <button onclick="cargarDia('viernes')">Viernes</button>
+    <button onclick="cargarDia('sabado')">Sábado</button>
   </div>
 </div>
 
-<div id="rutina"></div>
+<!-- APP -->
+<div id="app" class="hidden">
+  <div class="container">
+    <h2 id="titulo"></h2>
 
-<div id="reflexion" class="hidden">
-  <div class="card">
-    <h3>🧠 Reflexión</h3>
-    <textarea id="aprendi" placeholder="¿Qué aprendí?"></textarea>
-    <textarea id="no" placeholder="¿Qué no entendí?"></textarea>
-    <button onclick="guardar()">Guardar</button>
+    <div class="progress-bar">
+      <div class="progress" id="barra"></div>
+    </div>
+
+    <div id="rutina"></div>
   </div>
-</div>
-
-</div>
-
-<div class="tabs">
-  <div onclick="ver('rutina')">🏠 Día</div>
-  <div onclick="ver('reflexion')">🧠</div>
 </div>
 
 <script>
 
-const dias = ["domingo","lunes","martes","miercoles","jueves","viernes","sabado"];
-const hoy = dias[new Date().getDay()];
-document.getElementById("dia").innerText = hoy.toUpperCase();
+let diaActual = "";
 
-function cursos(){
+function mostrarDias(){
+  document.getElementById("dias").classList.remove("hidden");
+}
+
+function cursos(dia){
   const map = {
     lunes:["Botánica","Química"],
     martes:["Física","Matemática"],
@@ -122,74 +124,78 @@ function cursos(){
     viernes:["Botánica","Química"],
     sabado:["Física","Matemática"]
   };
-  return map[hoy];
+  return map[dia];
 }
 
-function rutina(){
+function rutina(dia){
   let r = [
-  ["06:00","Barrer"],
-  ["06:30","Tareas"],
-  ["06:45","Ducha"],
-  ["07:00","Desayuno"],
-  ["07:15","Traslado"]
+  ["06:00","🧹 Barrer"],
+  ["06:30","📋 Tareas"],
+  ["06:45","🚿 Ducha"],
+  ["07:00","🍳 Desayuno"],
+  ["07:15","🚌 Traslado"]
   ];
 
-  if(["lunes","jueves","sabado"].includes(hoy)){
-    r.push(["14:00","Deporte"]);
+  if(["lunes","jueves","sabado"].includes(dia)){
+    r.push(["14:00","⚽ Deporte"]);
   } else {
-    r.push(["14:00","Trabajo"]);
+    r.push(["14:00","💼 Trabajo"]);
   }
 
-  let c = cursos();
+  let c = cursos(dia);
 
-  r.push(["20:00","Curso fuerte: "+c[0]]);
-  r.push(["21:15","Descanso"]);
-  r.push(["21:20","Curso ligero: "+c[1]]);
+  r.push(["20:00","📘 "+c[0]]);
+  r.push(["21:15","☕ Descanso"]);
+  r.push(["21:20","📗 "+c[1]]);
 
   return r;
+}
+
+function cargarDia(dia){
+  diaActual = dia;
+
+  document.getElementById("inicio").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  document.getElementById("titulo").innerText = dia.toUpperCase();
+
+  cargar();
 }
 
 function cargar(){
   let cont = document.getElementById("rutina");
   cont.innerHTML = "";
-  let datos = rutina();
+
+  let datos = rutina(diaActual);
   let comp = 0;
 
   datos.forEach((e,i)=>{
-    let key = hoy+i;
+    let key = diaActual+i;
     let ok = localStorage.getItem(key);
 
     if(ok) comp++;
 
     cont.innerHTML += `
     <div class="card ${ok?'hecho':''}">
-      <b>${e[0]}</b> - ${e[1]}
-      <br>
-      <button onclick="done('${key}')">✔</button>
+      <div class="time">${e[0]}</div>
+      <div>${e[1]}</div>
+      <button onclick="toggle('${key}')">
+        ${ok ? "❌ Quitar" : "✔ Completar"}
+      </button>
     </div>`;
   });
 
   document.getElementById("barra").style.width = (comp/datos.length*100)+"%";
 }
 
-function done(k){
-  localStorage.setItem(k,true);
+function toggle(k){
+  if(localStorage.getItem(k)){
+    localStorage.removeItem(k);
+  } else {
+    localStorage.setItem(k,true);
+  }
   cargar();
 }
-
-function ver(t){
-  document.getElementById("rutina").classList.add("hidden");
-  document.getElementById("reflexion").classList.add("hidden");
-  document.getElementById(t).classList.remove("hidden");
-}
-
-function guardar(){
-  localStorage.setItem("aprendi"+hoy,aprendi.value);
-  localStorage.setItem("no"+hoy,no.value);
-  alert("Guardado");
-}
-
-cargar();
 
 </script>
 
