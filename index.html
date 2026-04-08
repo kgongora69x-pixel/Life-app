@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Life App PRO</title>
+<title>Mi Life App</title>
 
 <style>
 body {
@@ -12,7 +12,6 @@ body {
   color: white;
 }
 
-/* CAPA OSCURA */
 body::before {
   content: "";
   position: fixed;
@@ -24,27 +23,14 @@ body::before {
   z-index: -1;
 }
 
-/* INICIO */
 #inicio {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: fade 1s;
 }
 
-#inicio h1 {
-  font-size: 35px;
-}
-
-#inicio button {
-  background: #22c55e;
-  color: white;
-  font-size: 16px;
-}
-
-/* DIAS */
 #dias button {
   display: block;
   width: 200px;
@@ -53,19 +39,23 @@ body::before {
   color: white;
 }
 
-/* APP */
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
 .container {
   padding: 15px;
 }
 
 .card {
   background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-  animation: fadeUp 0.4s;
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
 }
 
 .hecho {
@@ -73,16 +63,8 @@ body::before {
 }
 
 .time {
-  font-size: 13px;
+  font-size: 12px;
   color: #ddd;
-}
-
-button {
-  padding: 6px 10px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 8px;
-  cursor: pointer;
 }
 
 .progress-bar {
@@ -93,45 +75,31 @@ button {
 
 .progress {
   height: 10px;
-  background: linear-gradient(90deg,#22c55e,#4ade80);
+  background: #22c55e;
   width: 0%;
 }
 
-/* ANIMACIONES */
-@keyframes fade {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@keyframes fadeUp {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
-}
-
 .hidden { display: none; }
-
 </style>
 </head>
 
 <body>
 
-<!-- INICIO -->
 <div id="inicio">
   <h1>📱 Mi Life App</h1>
   <button onclick="mostrarDias()">Entrar</button>
 
   <div id="dias" class="hidden">
-    <h3>📅 Elige tu día</h3>
-    <button onclick="cargarDia('lunes')">🌿 Lunes</button>
-    <button onclick="cargarDia('martes')">⚡ Martes</button>
-    <button onclick="cargarDia('miercoles')">📘 Miércoles</button>
-    <button onclick="cargarDia('jueves')">🔥 Jueves</button>
-    <button onclick="cargarDia('viernes')">🎯 Viernes</button>
-    <button onclick="cargarDia('sabado')">⚽ Sábado</button>
+    <h3>📅 Selecciona tu día</h3>
+    <button onclick="cargarDia('lunes')">Lunes</button>
+    <button onclick="cargarDia('martes')">Martes</button>
+    <button onclick="cargarDia('miercoles')">Miércoles</button>
+    <button onclick="cargarDia('jueves')">Jueves</button>
+    <button onclick="cargarDia('viernes')">Viernes</button>
+    <button onclick="cargarDia('sabado')">Sábado</button>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app" class="hidden">
   <div class="container">
     <h2 id="titulo"></h2>
@@ -159,38 +127,45 @@ function volver(){
   document.getElementById("inicio").style.display = "flex";
 }
 
-function cursos(dia){
-  const map = {
-    lunes:["🌿 Botánica","🧪 Química"],
-    martes:["⚡ Física","📐 Matemática"],
-    miercoles:["🌿 Botánica","🧪 Química"],
-    jueves:["⚡ Física","📐 Matemática"],
-    viernes:["🌿 Botánica","🧪 Química"],
-    sabado:["⚡ Física","📐 Matemática"]
-  };
-  return map[dia];
-}
-
 function rutina(dia){
   let r = [
   ["06:00","🧹 Barrer casa"],
-  ["06:30","📋 Tareas"],
+  ["06:30","🏠 Tareas domésticas"],
   ["06:45","🚿 Ducha"],
-  ["07:00","🍳 Desayuno"],
-  ["07:15","🚌 Traslado"]
+  ["07:00","🍳 Desayuno"]
   ];
 
-  if(["lunes","jueves","sabado"].includes(dia)){
-    r.push(["14:00","⚽ Deporte"]);
+  if(dia == "lunes" || dia == "miercoles" || dia == "viernes"){
+    r.push(["08:00","📘 Botánica"]);
+    r.push(["10:00","🧪 Química"]);
   } else {
-    r.push(["14:00","💼 Trabajo"]);
+    r.push(["08:00","⚡ Física"]);
+    r.push(["10:00","📐 Matemática"]);
   }
 
-  let c = cursos(dia);
+  if(dia == "jueves"){
+    r.push(["14:00 - 15:00","🍽 Almuerzo"]);
+  } else {
+    r.push(["14:00","🍽 Almuerzo"]);
+  }
 
-  r.push(["20:00","📘 "+c[0]]);
-  r.push(["21:15","☕ Descanso"]);
-  r.push(["21:20","📗 "+c[1]]);
+  if(["lunes","jueves","sabado"].includes(dia)){
+    r.push(["15:00 - 18:00","⚽ Deporte"]);
+  } else {
+    r.push(["15:00 - 19:00","💼 Trabajo"]);
+  }
+
+  r.push(["19:00 - 20:00","🛀 Cena / descanso"]);
+
+  if(["lunes","miercoles","viernes"].includes(dia)){
+    r.push(["20:00 - 21:00","📘 Botánica (fuerte)"]);
+    r.push(["21:00 - 21:15","☕ Descanso"]);
+    r.push(["21:15 - 22:00","🧪 Química (ligero)"]);
+  } else {
+    r.push(["20:00 - 21:00","⚡ Física (fuerte)"]);
+    r.push(["21:00 - 21:15","☕ Descanso"]);
+    r.push(["21:15 - 22:00","📐 Matemática (ligero)"]);
+  }
 
   return r;
 }
